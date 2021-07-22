@@ -53,7 +53,6 @@ namespace Product.Catalog.Api
 
             app.UseCloudEvents();
 
-            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapSubscribeHandler();

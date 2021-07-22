@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapr.Client;
 using MediatR;
+using Product.Catalog.Application.UseCases.CreateProduct.Events;
 
 namespace Product.Catalog.Application.UseCases.CreateProduct
 {
@@ -10,17 +11,16 @@ namespace Product.Catalog.Application.UseCases.CreateProduct
     {
         private readonly DaprClient _daprClient;
 
-        public CreateProductHandler(DaprClient daprClient)
-        {
-            _daprClient = daprClient;
-        }
+        public CreateProductHandler(DaprClient daprClient) => _daprClient = daprClient;
         public async Task<CreateProductResult> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            var topicName = nameof(CreateProductCommand);
-            await _daprClient.PublishEventAsync<CreateProductCommand>("pubsub", topicName, request);
+            await _daprClient.SaveStateAsync("mongo", request.Id.ToString(), request);
+
+            var topicName = nameof(ProductCreatedEvent);
+            await _daprClient.PublishEventAsync<ProductCreatedEvent>("pubsub", topicName, new ProductCreatedEvent(request.Id, request.Name));
 
             Console.WriteLine($"cadastrando produto {request.Name}");
-            return new CreateProductResult(Guid.NewGuid());
+            return new CreateProductResult(request.Id);
         }
     }
 }
