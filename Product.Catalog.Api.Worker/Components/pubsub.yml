@@ -1,0 +1,14 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: rabbitmq
+spec:
+  type: pubsub.rabbitmq
+  version: v1
+  metadata:
+  - name: host
+    value: "amqp://localhost:5672"
+  - name: durable
+    value: true
+  - name: deletedwhenunused
+    value: true

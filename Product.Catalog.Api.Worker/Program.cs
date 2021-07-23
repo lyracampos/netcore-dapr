@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Product.Catalog.Api
+namespace Product.Catalog.Api.Worker
 {
     public class Program
     {
@@ -15,7 +15,7 @@ namespace Product.Catalog.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://localhost:5004");
+                    webBuilder.UseUrls("http://localhost:5005");
                 });
     }
 }
