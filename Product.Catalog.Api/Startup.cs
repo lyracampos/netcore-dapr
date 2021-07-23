@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Product.Catalog.Application.UseCases.CreateProduct;
+using Product.Catalog.Application.Interfaces;
+using Product.Catalog.Application.UseCases.CreateProduct.Commands;
+using Product.Catalog.Infrastructure.Data;
 
 namespace Product.Catalog.Api
 {
@@ -34,6 +29,7 @@ namespace Product.Catalog.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product.Catalog.Api", Version = "v1" });
             });
             services.AddMediatR(typeof(CreateProductHandler));
+            services.AddTransient<IProductRepository, ProductRepository>();
 
         }
 

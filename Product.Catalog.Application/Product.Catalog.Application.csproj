@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapr.AspNetCore" Version="1.3.0-rc01" />
+    <PackageReference Include="Dapr.AspNetCore" Version="1.2.0" />
+    <PackageReference Include="Dapr.Client" Version="1.2.0" />
     <PackageReference Include="MediatR" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Product.Catalog.Domain\Product.Catalog.Domain.csproj" />
   </ItemGroup>
 
 </Project>

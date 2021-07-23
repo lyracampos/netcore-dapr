@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Dapr.Client;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Product.Catalog.Api.Models;
-using Product.Catalog.Application.UseCases.CreateProduct;
+using Product.Catalog.Application.Interfaces;
+using Product.Catalog.Application.UseCases.CreateProduct.Commands;
 
 namespace Product.Catalog.Api.Controllers
 {
@@ -13,30 +12,30 @@ namespace Product.Catalog.Api.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly ILogger logger;
-        private readonly IMediator mediator;
-        private readonly DaprClient daprClient;
+        private readonly ILogger _logger;
+        private readonly IMediator _mediator;
+        private readonly IProductRepository _productRepository;
 
-        public ProductController(ILogger<ProductController> logger, IMediator mediator, DaprClient daprClient)
+        public ProductController(ILogger<ProductController> logger, IMediator mediator, IProductRepository productRepository)
         {
-            this.logger = logger;
-            this.mediator = mediator;
-            this.daprClient = daprClient;
+            _logger = logger;
+            _mediator = mediator;
+            _productRepository = productRepository;
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var product = await daprClient.GetStateAsync<CreateProductCommand>("mongo", id.ToString());
+            var product = await _productRepository.Get(id);
             return Ok(product);
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateProductCommand command)
         {
-            logger.LogTrace($"Starting: {nameof(ProductController)} - Post - {DateTime.UtcNow}");
+            _logger.LogTrace($"Starting: {nameof(ProductController)} - Post - {DateTime.UtcNow}");
 
-            var result = await mediator.Send(command);
+            var product = await _mediator.Send(command);
 
-            return Created("", result);
+            return Created($"api/product/{product.Id}", product);
         }
     }
 }
